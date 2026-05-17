@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>BananaQ — Smart Banana Disease Detection | Full Responsive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #dce8c8 0%, #b8cf9a 100%);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* MAIN WRAPPER: uses viewport height to fill screen exactly, no floating feel */
+        .app-fullscreen {
+            width: 100%;
+            height: 100vh;
+            background: #FFFEF7;
+            display: flex;
+            flex-direction: column;
+            box-shadow: none;
+            border-radius: 0;
+            overflow: hidden;
+        }
+
+        /* App content — flexible scrolling area */
+        .app-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem 1.25rem;
+            background: #FFFCF5;
+            scroll-behavior: smooth;
+        }
+
+        /* Custom scroll */
+        .app-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        .app-content::-webkit-scrollbar-track {
+            background: #F2ECCF;
+            border-radius: 10px;
+        }
+        .app-content::-webkit-scrollbar-thumb {
+            background: #F4C542;
+            border-radius: 10px;
+        }
+
+        /* Card styles - fully responsive */
+        .demo-card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02), 0 2px 6px rgba(94, 155, 51, 0.08);
+            border-left: 5px solid #F9D85E;
+            transition: transform 0.2s;
+        }
+
+        .demo-icon {
+            background: #FFF6E0;
+            width: 52px;
+            height: 52px;
+            border-radius: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            color: #F4B942;
+            margin-right: 12px;
+        }
+
+        .greeting {
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: #5E9B33;
+        }
+
+        .badge-leaf {
+            background: #E9F3DF;
+            color: #4C7A2C;
+            padding: 0.3rem 0.9rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .fun-leaf {
+            background: #FDF5DE;
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        /* ---------- BOTTOM NAV (bootstrap grid + custom) ---------- */
+        .bottom-nav-container {
+            background: #FFFFFF;
+            border-top: 1px solid #FDEEC2;
+            padding: 0.6rem 1rem 0.8rem 1rem;
+            position: relative;
+            width: 100%;
+        }
+
+        .nav-shell {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 0.5rem;
+            position: relative;
+        }
+
+        /* regular nav item */
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            padding: 0.4rem 0 0.2rem 0;
+            border-radius: 40px;
+            gap: 6px;
+            min-height: 64px;
+        }
+
+        .nav-spacer {
+            flex: 1;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .nav-icon {
+            font-size: 1.6rem;
+            transition: transform 0.2s ease, color 0.2s;
+            color: #F4C542;
+        }
+
+        .nav-label {
+            font-size: 0.75rem !important;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            color: #F4C542;
+        }
+
+        .nav-item.active .nav-icon {
+            color: #5E9B33 !important;
+            transform: translateY(-2px);
+        }
+        .nav-item.active .nav-label {
+            color: #5E9B33 !important;
+            font-weight: 700;
+        }
+
+        .nav-item:active {
+            transform: scale(0.95);
+        }
+
+        /* ---------- FLOATING SCAN (lifted, modern) ---------- */
+        .scan-float {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 1.5rem;
+            z-index: 30;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .scan-btn-wrapper {
+            background: #FDEEC2;
+            width: 74px;
+            height: 70px;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+        }
+
+        .scan-btn {
+            background: #F4C542;
+            width: 58px;
+            height: 54px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            transition: all 0.25s;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scan-btn i {
+            font-size: 1.9rem;
+            color: white;
+            transition: all 0.25s;
+        }
+
+        .scan-btn:active {
+            transform: translateY(2px);
+        }
+        .scan-btn-wrapper:active {
+            transform: scale(0.96);
+        }
+
+        /* ACTIVE SCANNER (full green) */
+        .scan-float.active .scan-btn-wrapper {
+            background: #5E9B33 !important;
+            box-shadow: 0 8px 20px rgba(94, 155, 51, 0.35);
+        }
+        .scan-float.active .scan-btn {
+            background: #3a6b1f !important;
+        }
+        .scan-float.active .scan-btn i {
+            transform: scale(1.05);
+        }
+
+        .scan-label {
+            font-size: 0.75rem !important;
+            font-weight: 600;
+            color: #F4C542 !important;
+            letter-spacing: 0.2px;
+            white-space: nowrap;
+            background: transparent;
+        }
+
+        .scan-float.active .scan-label {
+            color: #5E9B33 !important;
+            font-weight: 700;
+        }
+
+        .scan-float:hover .scan-btn-wrapper {
+            transform: translateY(-3px);
+        }
+
+        .content-note {
+            background: #FEF7E6;
+            border-radius: 28px;
+            padding: 0.9rem 1.2rem;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #5e6e48;
+            margin-top: 1rem;
+            border: 1px solid #F0E2B6;
+        }
+
+        /* ripple effect */
+        .ripple-effect {
+            position: absolute;
+            z-index: 10;
+            pointer-events: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(0);
+            animation: ripple-animation 0.5s ease-out forwards;
+        }
+        @keyframes ripple-animation {
+            0% { transform: scale(0); opacity: 0.6; }
+            100% { transform: scale(10); opacity: 0; }
+        }
+
+        /* ensure no outline on focus */
+        .scan-btn:focus, .nav-item:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        /* For tall screens content adjusts smoothly */
+        @media (max-width: 480px) {
+            .demo-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 22px;
+            }
+            .greeting {
+                font-size: 1.3rem;
+            }
+            .nav-icon {
+                font-size: 1.4rem;
+            }
+            .scan-btn-wrapper {
+                width: 66px;
+                height: 62px;
+            }
+            .scan-btn {
+                width: 52px;
+                height: 48px;
+            }
+            .scan-btn i {
+                font-size: 1.7rem;
+            }
+            .bottom-nav-container {
+                padding: 0.4rem 0.75rem 0.7rem;
+            }
+        }
+
+        /* extra small devices */
+        @media (max-width: 360px) {
+            .nav-label, .scan-label {
+                font-size: 0.65rem !important;
+            }
+            .nav-icon {
+                font-size: 1.3rem;
+            }
+            .scan-btn-wrapper {
+                width: 60px;
+                height: 56px;
+            }
+            .scan-btn {
+                width: 48px;
+                height: 44px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- FULLSCREEN CONTAINER — uses 100vh, no floating look, fits any device exactly -->
+<div class="app-fullscreen">
+    
+    <!-- Scrollable main content -->
+    <div class="app-content" id="appContent">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <div class="fun-leaf">
+                <i class="fas fa-leaf" style="color:#5E9B33;"></i> 
+                <span>BananaQ AI</span>
+            </div>
+            <div class="badge-leaf">
+                <i class="fas fa-robot me-1"></i> leaf guard
+            </div>
+        </div>
+
+        <div class="demo-card">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <div class="demo-icon"><i class="fas fa-seedling"></i></div>
+                <div>
+                    <div class="greeting" id="dynamicGreeting">🌞 Good day, Juan!</div>
+                    <p class="text-muted small mb-0" style="color: #6A7A4E;">Your banana health companion</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-card">
+            <div class="d-flex gap-3 align-items-center flex-wrap">
+                <i class="fas fa-chart-line" style="font-size: 2rem; color: #F4C542;"></i>
+                <div>
+                    <strong class="text-success">🌿 Smart recommendation</strong><br>
+                    <span class="small">Early Sigatoka prevention: improve airflow</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-note" id="activeTabMessage">
+            <i class="fas fa-home me-1"></i> 
+            <span id="currentScreenLabel">🏡 Home dashboard — Tap any tab below</span>
+        </div>
+        <div class="mt-2"></div>
+    </div>
+
+    <!-- BOTTOM NAVIGATION with Floating Scan -->
+    <div class="bottom-nav-container">
+        <div class="nav-shell">
+            <!-- HOME -->
+            <button class="nav-item" data-tab="home">
+                <div class="nav-icon"><i class="fas fa-home"></i></div>
+                <span class="nav-label">Home</span>
+            </button>
+            <!-- HISTORY -->
+            <button class="nav-item" data-tab="history">
+                <div class="nav-icon"><i class="fas fa-history"></i></div>
+                <span class="nav-label">History</span>
+            </button>
+            <!-- spacer for symmetry (invisible) -->
+            <div class="nav-spacer"></div>
+            <!-- FEEDBACK -->
+            <button class="nav-item" data-tab="feedback">
+                <div class="nav-icon"><i class="fas fa-comment-dots"></i></div>
+                <span class="nav-label">Feedback</span>
+            </button>
+            <!-- ACCOUNT -->
+            <button class="nav-item" data-tab="account">
+                <div class="nav-icon"><i class="fas fa-user-circle"></i></div>
+                <span class="nav-label">Account</span>
+            </button>
+        </div>
+
+        <!-- FLOATING SCAN BUTTON (raised, active turns entire green) -->
+        <div class="scan-float" data-tab="scan">
+            <div class="scan-btn-wrapper">
+                <button class="scan-btn" aria-label="Scan">
+                    <i class="fas fa-camera"></i>
+                </button>
+            </div>
+            <div class="scan-label">Scan</div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // --------------------------------------------------------------
+    // BananaQ — Full Responsive, active scan = green (wrapper+btn+icon)
+    // No floating frame: app fills entire viewport exactly
+    // --------------------------------------------------------------
+
+    const tabData = [
+        { id: 'home', label: 'Home', icon: 'fa-home', message: '🏡 Home dashboard — view disease alerts & banana tips' },
+        { id: 'history', label: 'History', icon: 'fa-history', message: '📋 Scan history — previous diagnoses and recommendations' },
+        { id: 'scan', label: 'Scan', icon: 'fa-camera', message: '📸 Smart Camera — point camera at banana leaves. AI detects diseases instantly!' },
+        { id: 'feedback', label: 'Feedback', icon: 'fa-comment-dots', message: '⭐ Feedback — help us improve the AI by rating diagnoses' },
+        { id: 'account', label: 'Account', icon: 'fa-user-circle', message: '👤 Account — manage profile, farm details & language settings' }
+    ];
+
+    const navButtons = document.querySelectorAll('.nav-item');
+    const scanFloat = document.querySelector('.scan-float');
+    const screenSpan = document.getElementById('currentScreenLabel');
+    const greetingEl = document.getElementById('dynamicGreeting');
+    const msgPanel = document.getElementById('activeTabMessage');
+
+    function activateTab(activeId) {
+        // regular nav items
+        navButtons.forEach(btn => {
+            const val = btn.getAttribute('data-tab');
+            if (val === activeId) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        // floating scan active state (full green)
+        if (scanFloat) {
+            const scanId = scanFloat.getAttribute('data-tab');
+            if (scanId === activeId) {
+                scanFloat.classList.add('active');
+            } else {
+                scanFloat.classList.remove('active');
+            }
+        }
+
+        // update content message
+        const activeObj = tabData.find(t => t.id === activeId);
+        if (activeObj && screenSpan) {
+            screenSpan.innerHTML = `<i class="fas ${activeObj.icon} me-1"></i> ${activeObj.message}`;
+        }
+
+        // dynamic greeting
+        if (greetingEl) {
+            if (activeId === 'home') greetingEl.innerHTML = '🌞 Good day, Maria!';
+            else if (activeId === 'scan') greetingEl.innerHTML = '📸 Camera ready — scan now';
+            else if (activeId === 'history') greetingEl.innerHTML = '📜 Your farm journey';
+            else if (activeId === 'feedback') greetingEl.innerHTML = '💬 Let’s grow together';
+            else if (activeId === 'account') greetingEl.innerHTML = '🍌 BananaQ profile';
+        }
+
+        // subtle flash effect when scan selected
+        if (activeId === 'scan' && msgPanel) {
+            msgPanel.style.background = '#FEF0D4';
+            setTimeout(() => { if(msgPanel) msgPanel.style.background = ''; }, 300);
+        }
+    }
+
+    // attach click events to standard nav items
+    navButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const tabId = btn.getAttribute('data-tab');
+            if (tabId) {
+                activateTab(tabId);
+                btn.style.transform = 'scale(0.96)';
+                setTimeout(() => { if(btn) btn.style.transform = ''; }, 120);
+            }
+        });
+    });
+
+    // Floating scan button click handler
+    if (scanFloat) {
+        const scanInnerBtn = scanFloat.querySelector('.scan-btn');
+        
+        const handleScanTap = (e) => {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const scanId = scanFloat.getAttribute('data-tab');
+            if (scanId) {
+                activateTab(scanId);
+                const btnInner = scanFloat.querySelector('.scan-btn');
+                if (btnInner) {
+                    btnInner.style.transform = 'scale(0.92)';
+                    setTimeout(() => { if(btnInner) btnInner.style.transform = ''; }, 150);
+                }
+            }
+        };
+
+        if (scanInnerBtn) {
+            scanInnerBtn.addEventListener('click', handleScanTap);
+        }
+        scanFloat.addEventListener('click', (e) => {
+            if (scanInnerBtn && (e.target === scanInnerBtn || scanInnerBtn.contains(e.target))) return;
+            handleScanTap(e);
+        });
+
+        // press animation for wrapper
+        const wrap = scanFloat.querySelector('.scan-btn-wrapper');
+        if (wrap) {
+            wrap.addEventListener('mousedown', () => { wrap.style.transform = 'scale(0.96)'; });
+            wrap.addEventListener('mouseup', () => { wrap.style.transform = ''; });
+            wrap.addEventListener('mouseleave', () => { wrap.style.transform = ''; });
+        }
+        if (scanInnerBtn) {
+            scanInnerBtn.addEventListener('mousedown', () => { if(wrap) wrap.style.transform = 'scale(0.96)'; });
+            scanInnerBtn.addEventListener('mouseup', () => { if(wrap) wrap.style.transform = ''; });
+            scanInnerBtn.addEventListener('mouseleave', () => { if(wrap) wrap.style.transform = ''; });
+        }
+    }
+
+    // micro interactions for nav items (press feedback)
+    document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.addEventListener('mousedown', () => { btn.style.transform = 'scale(0.95)'; });
+        btn.addEventListener('mouseup', () => { btn.style.transform = ''; });
+        btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+    });
+
+    // default active = home
+    activateTab('home');
+
+    // rotating scanner tips (only visible when scanner active)
+    const scanTips = [
+        "🍌 Pro tip: Remove diseased leaves to stop fungus spread",
+        "🌱 Weekly scouting reduces Sigatoka by 60%",
+        "📸 Use flash in low light for accurate detection",
+        "💧 Water early morning to reduce leaf wetness",
+        "🐞 Encourage beneficial insects near banana plots",
+        "🔍 BananaQ AI detects 99% of early infections"
+    ];
+    let tipCounter = 0;
+    setInterval(() => {
+        if (msgPanel && scanFloat && scanFloat.classList.contains('active')) {
+            const tip = scanTips[tipCounter % scanTips.length];
+            msgPanel.innerHTML = `<i class="fas fa-camera" style="color:#5E9B33;"></i> ${tip} &nbsp;🔍`;
+            tipCounter++;
+        } else if (msgPanel) {
+            // restore current tab message if not in scan mode
+            const activeNav = document.querySelector('.nav-item.active');
+            let activeId = activeNav ? activeNav.getAttribute('data-tab') : 'home';
+            if (scanFloat && scanFloat.classList.contains('active')) activeId = 'scan';
+            const tabInfo = tabData.find(t => t.id === activeId);
+            if (tabInfo && !msgPanel.innerHTML.includes(tabInfo.message)) {
+                msgPanel.innerHTML = `<i class="fas ${tabInfo.icon} me-1"></i> ${tabInfo.message}`;
+            }
+        }
+    }, 4800);
+
+    // Ripple effect for scan button (delight)
+    function attachRipple(el) {
+        if (!el) return;
+        el.addEventListener('click', (e) => {
+            const rippleSpan = document.createElement('span');
+            rippleSpan.classList.add('ripple-effect');
+            const rect = el.getBoundingClientRect();
+            let x = e.clientX ? e.clientX - rect.left : rect.width / 2;
+            let y = e.clientY ? e.clientY - rect.top : rect.height / 2;
+            rippleSpan.style.left = `${x}px`;
+            rippleSpan.style.top = `${y}px`;
+            rippleSpan.style.position = 'absolute';
+            el.style.position = 'relative';
+            el.appendChild(rippleSpan);
+            setTimeout(() => rippleSpan.remove(), 500);
+        });
+    }
+    const realScanBtn = document.querySelector('.scan-btn');
+    if (realScanBtn) attachRipple(realScanBtn);
+
+    // ensure border color consistency on scroll (background match)
+    const scrollArea = document.querySelector('.app-content');
+    const navBar = document.querySelector('.bottom-nav-container');
+    if (scrollArea && navBar) {
+        scrollArea.addEventListener('scroll', () => {
+            // just a placeholder for stability
+            if (scrollArea.scrollTop > 5) {
+                navBar.style.borderTopColor = '#FDEEC2';
+            } else {
+                navBar.style.borderTopColor = '#FDEEC2';
+            }
+        });
+    }
+
+    // prevent context menu on interactive elements
+    document.querySelectorAll('.nav-item, .scan-btn, .scan-float').forEach(el => {
+        el.addEventListener('contextmenu', (e) => e.preventDefault());
+    });
+
+    // Final polish: enforce exact green active style (full)
+    console.log("✅ BananaQ fully responsive — fills viewport, scanner active (green wrapper/button/icon), no floating frame.");
+</script>
+
+<!-- additional safety overrides for colors and full green activation -->
+<style>
+    /* Hard overwrites for consistency */
+    .nav-item .nav-icon, .nav-item .nav-label {
+        color: #F4C542 !important;
+    }
+    .nav-item.active .nav-icon,
+    .nav-item.active .nav-label {
+        color: #5E9B33 !important;
+    }
+
+    .scan-label {
+        color: #F4C542 !important;
+    }
+    .scan-float.active .scan-label {
+        color: #5E9B33 !important;
+    }
+
+    .scan-btn-wrapper {
+        background: #FDEEC2 !important;
+    }
+    .scan-float.active .scan-btn-wrapper {
+        background: #5E9B33 !important;
+        box-shadow: 0 6px 16px rgba(94, 155, 51, 0.35) !important;
+    }
+    .scan-float.active .scan-btn {
+        background: #3a6b1f !important;
+    }
+    .scan-float.active .scan-btn i {
+        color: white !important;
+        transform: scale(1.02);
+    }
+    .scan-btn i {
+        color: white !important;
+    }
+    .bottom-nav-container {
+        border-top: 1px solid #FDEEC2;
+    }
+    .scan-btn, .scan-btn:focus {
+        outline: none;
+        box-shadow: none;
+    }
+    .nav-spacer {
+        visibility: hidden;
+        flex: 1;
+    }
+    /* Remove any external borders that might cause floating look */
+    .app-fullscreen {
+        border-radius: 0;
+        margin: 0;
+        width: 100%;
+        height: 100vh;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    /* ensure consistent spacing on all devices */
+    .nav-item, .scan-float {
+        min-height: 62px;
+    }
+    @media (max-width: 480px) {
+        .nav-item, .scan-float {
+            min-height: 56px;
+        }
+    }
+</style>
+</body>
+</html>
