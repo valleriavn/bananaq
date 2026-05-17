@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes"
+    />
+    <title>BananaQ — Language Selection</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: linear-gradient(145deg, #dce8c8 0%, #b8cf9a 100%);
+        font-family: "Inter", sans-serif;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .app-fullscreen {
+        width: 100%;
+        height: 100vh;
+        background: #fffef7;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .app-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1.5rem 1.25rem;
+        background: #fffcf5;
+        scroll-behavior: smooth;
+      }
+
+      .app-content::-webkit-scrollbar {
+        width: 4px;
+      }
+      .app-content::-webkit-scrollbar-track {
+        background: #f2eccf;
+        border-radius: 10px;
+      }
+      .app-content::-webkit-scrollbar-thumb {
+        background: #f4c542;
+        border-radius: 10px;
+      }
+
+      .language-card {
+        background: white;
+        border-radius: 32px;
+        padding: 2rem 1.5rem;
+        box-shadow:
+          0 8px 20px rgba(0, 0, 0, 0.02),
+          0 2px 6px rgba(94, 155, 51, 0.08);
+        border-left: 5px solid #f9d85e;
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      .logo-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
+
+      .logo-circle {
+        background: #fff6e0;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+      }
+
+      .logo-circle img {
+        width: 70px;
+        height: auto;
+        display: block;
+      }
+
+      .app-title {
+        font-weight: 800;
+        font-size: 2rem;
+        color: #5e9b33;
+        text-align: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .tagline {
+        text-align: center;
+        font-size: 0.95rem;
+        color: #f4b942;
+        font-weight: 600;
+        margin-bottom: 1.75rem;
+      }
+
+      .choose-text {
+        text-align: center;
+        font-weight: 600;
+        color: #6a7a4e;
+        margin-bottom: 1.25rem;
+        font-size: 1rem;
+      }
+
+      .language-btn {
+        width: 100%;
+        background: #fef7e6;
+        border: 2px solid #fdeec2;
+        border-radius: 60px;
+        padding: 0.85rem 1rem;
+        font-weight: 700;
+        font-size: 1rem;
+        color: #5e6e48;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+      }
+
+      .language-btn i {
+        font-size: 1.25rem;
+        color: #f4c542;
+      }
+
+      .language-btn.active {
+        background: #e9f3df;
+        border-color: #5e9b33;
+        color: #3a6b1f;
+      }
+
+      .language-btn.active i {
+        color: #5e9b33;
+      }
+
+      .language-btn:active {
+        transform: scale(0.98);
+      }
+
+      .btn-eng {
+        margin-bottom: 0.75rem;
+      }
+
+      .btn-tag {
+        margin-bottom: 1.75rem;
+      }
+
+      .terms-check {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 1.75rem;
+        flex-wrap: wrap;
+        cursor: pointer;
+      }
+
+      .terms-check input {
+        width: 18px;
+        height: 18px;
+        accent-color: #5e9b33;
+        cursor: pointer;
+      }
+
+      .terms-check label {
+        font-size: 0.8rem;
+        color: #6a7a4e;
+        font-weight: 500;
+        cursor: pointer;
+        margin: 0;
+      }
+
+      .terms-check a {
+        color: #5e9b33;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .terms-check a:hover {
+        text-decoration: underline;
+      }
+
+      .submit-btn {
+        width: 100%;
+        background: #f4c542;
+        border: none;
+        border-radius: 60px;
+        padding: 0.9rem;
+        font-weight: 800;
+        font-size: 1rem;
+        color: white;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 10px rgba(244, 197, 66, 0.3);
+      }
+
+      .submit-btn:active {
+        transform: scale(0.97);
+        background: #dbaa2a;
+      }
+
+      .submit-btn:disabled {
+        background: #e2d5b6;
+        box-shadow: none;
+        transform: none;
+        cursor: not-allowed;
+      }
+
+      .error-msg {
+        text-align: center;
+        font-size: 0.75rem;
+        color: #d9534f;
+        margin-top: 0.75rem;
+        font-weight: 500;
+      }
+
+      @media (max-width: 480px) {
+        .app-content {
+          padding: 1rem 1rem;
+        }
+        .language-card {
+          padding: 1.5rem 1.2rem;
+        }
+        .logo-circle {
+          width: 80px;
+          height: 80px;
+        }
+        .logo-circle img {
+          width: 55px;
+        }
+        .app-title {
+          font-size: 1.7rem;
+        }
+        .tagline {
+          font-size: 0.85rem;
+        }
+        .choose-text {
+          font-size: 0.9rem;
+        }
+        .language-btn {
+          padding: 0.7rem 1rem;
+          font-size: 0.9rem;
+        }
+        .terms-check label {
+          font-size: 0.7rem;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .app-title {
+          font-size: 1.5rem;
+        }
+        .logo-circle {
+          width: 70px;
+          height: 70px;
+        }
+        .logo-circle img {
+          width: 48px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-fullscreen">
+      <div class="app-content">
+        <div class="language-card">
+          <div class="logo-wrapper">
+            <div class="logo-circle">
+              <img
+                src="logo.png"
+                alt="BananaQ Logo"
+                onerror="this.src = 'https://placehold.co/100x100?text=🍌'"
+              />
+            </div>
+          </div>
+          <div class="app-title">BananaQ</div>
+          <div class="tagline">Have an agriculture-filled day!</div>
+          <div class="choose-text">Choose your preferred language</div>
+
+          <div class="language-btn btn-eng" id="btnEnglish">
+            <i class="fas fa-globe-americas"></i> English
+          </div>
+          <div class="language-btn btn-tag" id="btnTagalog">
+            <i class="fas fa-leaf"></i> Tagalog
+          </div>
+
+          <div class="terms-check" id="termsCheckbox">
+            <input type="checkbox" id="termsAgree" />
+            <label for="termsAgree">
+              I have read and agreed to the <a href="#">Terms of Use</a> and
+              <a href="#">Privacy Policy</a>
+            </label>
+          </div>
+
+          <button class="submit-btn" id="submitBtn">Submit</button>
+          <div id="errorMsg" class="error-msg"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const btnEnglish = document.getElementById("btnEnglish");
+      const btnTagalog = document.getElementById("btnTagalog");
+      const termsCheck = document.getElementById("termsAgree");
+      const submitBtn = document.getElementById("submitBtn");
+      const errorMsgDiv = document.getElementById("errorMsg");
+
+      let selectedLanguage = null;
+
+      function removeActiveClass() {
+        btnEnglish.classList.remove("active");
+        btnTagalog.classList.remove("active");
+      }
+
+      btnEnglish.addEventListener("click", () => {
+        removeActiveClass();
+        btnEnglish.classList.add("active");
+        selectedLanguage = "English";
+        errorMsgDiv.innerText = "";
+      });
+
+      btnTagalog.addEventListener("click", () => {
+        removeActiveClass();
+        btnTagalog.classList.add("active");
+        selectedLanguage = "Tagalog";
+        errorMsgDiv.innerText = "";
+      });
+
+      function validateAndRedirect() {
+        let hasError = false;
+        if (!selectedLanguage) {
+          hasError = true;
+          errorMsgDiv.innerText = "Please select a language.";
+        } else if (!termsCheck.checked) {
+          hasError = true;
+          errorMsgDiv.innerText =
+            "You must agree to the Terms of Use and Privacy Policy.";
+        } else {
+          errorMsgDiv.innerText = "";
+        }
+
+        if (!hasError) {
+          alert(
+            `You selected: ${selectedLanguage}\nProceeding to BananaQ app.`,
+          );
+        }
+      }
+
+      submitBtn.addEventListener("click", validateAndRedirect);
+
+      btnEnglish.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          btnEnglish.click();
+        }
+      });
+      btnTagalog.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          btnTagalog.click();
+        }
+      });
+      submitBtn.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          submitBtn.click();
+        }
+      });
+
+      document.querySelector(".terms-check").addEventListener("click", (e) => {
+        if (
+          e.target.tagName !== "INPUT" &&
+          e.target.tagName !== "LABEL" &&
+          !e.target.closest("a")
+        ) {
+          const cb = document.getElementById("termsAgree");
+          cb.checked = !cb.checked;
+        }
+      });
+    </script>
+  </body>
+</html>
